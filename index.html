@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>クラス共有ノート</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="toast" class="toast" hidden></div>
+
+  <header class="topbar">
+    <button id="backButton" class="icon-button" hidden>←</button>
+
+    <div>
+      <h1 id="pageTitle">クラス共有ノート</h1>
+      <p id="classLabel" class="muted"></p>
+    </div>
+
+    <button id="accountButton" class="icon-button" hidden>⚙</button>
+  </header>
+
+  <main class="container">
+
+    <!-- ログイン・新規登録 -->
+    <section id="authView" class="view">
+      <div class="card narrow">
+        <h2>ログイン</h2>
+
+        <label>
+          メールアドレス
+          <input id="loginEmail" type="email" />
+        </label>
+
+        <label>
+          パスワード
+          <input id="loginPassword" type="password" />
+        </label>
+
+        <button id="loginButton" class="primary">
+          ログイン
+        </button>
+
+        <hr />
+
+        <h2>新規登録</h2>
+
+        <label>
+          表示名
+          <input id="signupName" type="text" maxlength="40" />
+        </label>
+
+        <label>
+          区分
+          <select id="signupRole">
+            <option value="student">生徒</option>
+            <option value="teacher">先生</option>
+          </select>
+        </label>
+
+        <label>
+          メールアドレス
+          <input id="signupEmail" type="email" />
+        </label>
+
+        <label>
+          パスワード（6文字以上）
+          <input id="signupPassword" type="password" />
+        </label>
+
+        <button id="signupButton">
+          アカウントを作る
+        </button>
+      </div>
+    </section>
+
+
+    <!-- クラス選択 -->
+    <section id="classView" class="view" hidden>
+
+      <div class="grid-two">
+
+        <div class="card">
+          <h2>クラスに参加</h2>
+
+          <p class="muted">
+            クラスコードを入力してください。
+          </p>
+
+          <label>
+            クラスコード
+            <input
+              id="joinClassCode"
+              type="text"
+              maxlength="12"
+              placeholder="例: A7K3P9Q2M4XZ"
+            />
+          </label>
+
+          <button id="joinClassButton" class="primary">
+            参加する
+          </button>
+        </div>
+
+
+        <div id="createClassCard" class="card" hidden>
+          <h2>クラスを作成（先生）</h2>
+
+          <label>
+            学校名
+            <input id="schoolName" type="text" maxlength="60" />
+          </label>
+
+          <label>
+            学年
+            <input
+              id="gradeName"
+              type="text"
+              maxlength="20"
+              placeholder="例: 3年"
+            />
+          </label>
+
+          <label>
+            クラス名
+            <input
+              id="className"
+              type="text"
+              maxlength="30"
+              placeholder="例: 2組"
+            />
+          </label>
+
+          <button id="createClassButton">
+            クラスを作る
+          </button>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+        <h2>参加中のクラス</h2>
+
+        <div id="myClassList" class="list"></div>
+      </div>
+    </section>
+
+
+    <!-- 選択画面 -->
+    <section id="homeView" class="view" hidden>
+
+      <div class="home-grid">
+
+        <button class="home-tile" data-open="assignmentsView">
+          <span class="tile-icon">📋</span>
+          <strong>提出物</strong>
+          <span>教科別の提出物・状況</span>
+        </button>
+
+        <button class="home-tile" data-open="timetableView">
+          <span class="tile-icon">📅</span>
+          <strong>時間割</strong>
+          <span>月〜金・1〜6限・行事</span>
+        </button>
+
+        <button class="home-tile" data-open="lessonView">
+          <span class="tile-icon">📝</span>
+          <strong>授業内容連絡</strong>
+          <span>今日の学習内容を共有</span>
+        </button>
+
+      </div>
+
+
+      <div class="card">
+        <h2>クラス情報</h2>
+
+        <p>
+          クラスコード:
+          <strong id="currentClassCode"></strong>
+        </p>
+
+        <p class="muted">
+          このコードを使ってクラスに参加できます。
+        </p>
+      </div>
+    </section>
+
+
+    <!-- 提出物 -->
+    <section id="assignmentsView" class="view" hidden>
+
+      <div class="page-actions">
+        <button id="addAssignmentButton" class="primary">
+          ＋ 提出物を追加
+        </button>
+      </div>
+
+      <div id="assignmentGroups"></div>
+    </section>
+
+
+    <!-- 時間割 -->
+    <section id="timetableView" class="view" hidden>
+
+      <div class="card">
+        <h2>時間割</h2>
+
+        <p class="muted">
+          マスを押すと編集できます。
+        </p>
+
+        <div class="table-wrap">
+          <table class="timetable">
+
+            <thead>
+              <tr>
+                <th>時限</th>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+              </tr>
+            </thead>
+
+            <tbody id="timetableBody"></tbody>
+
+          </table>
+        </div>
+      </div>
+
+
+      <div class="card">
+
+        <div class="section-header">
+          <h2>行事・日課・連絡事項</h2>
+
+          <button id="addEventButton">
+            ＋追加
+          </button>
+        </div>
+
+        <div id="eventList" class="list"></div>
+      </div>
+
+    </section>
+
+
+    <!-- 授業内容連絡 -->
+    <section id="lessonView" class="view" hidden>
+
+      <div class="card">
+
+        <div class="lesson-top">
+
+          <label>
+            日付
+            <input id="lessonDate" type="date" />
+          </label>
+
+          <button id="loadLessonButton">
+            この日を表示
+          </button>
+
+        </div>
+
+
+        <label>
+          記入者
+          <input id="lessonWriter" type="text" maxlength="40" />
+        </label>
+
+
+        <div id="lessonPeriods"></div>
+
+
+        <label>
+          今日のみんなは・・・
+          <textarea id="everyoneNote" rows="4"></textarea>
+        </label>
+
+
+        <label>
+          今日の先生は・・・
+          <textarea id="teacherNote" rows="4"></textarea>
+        </label>
+
+
+        <button id="saveLessonButton" class="primary">
+          この日の内容を保存
+        </button>
+
+        <button id="deleteLessonButton" class="danger">
+          この日の内容を削除
+        </button>
+
+      </div>
+    </section>
+
+
+    <!-- アカウント画面 -->
+    <section id="accountView" class="view" hidden>
+
+      <div class="card">
+        <h2>アカウント</h2>
+
+        <p id="accountInfo"></p>
+
+        <button id="changeClassButton">
+          クラス選択へ
+        </button>
+
+        <button id="logoutButton" class="danger">
+          ログアウト
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- 提出物入力画面 -->
+  <dialog id="assignmentDialog">
+
+    <form id="assignmentForm" method="dialog" class="dialog-form">
+
+      <h2 id="assignmentDialogTitle">
+        提出物を追加
+      </h2>
+
+      <input id="assignmentId" type="hidden" />
+
+
+      <label>
+        分類
+
+        <select id="assignmentCategory">
+          <option>国語</option>
+          <option>社会</option>
+          <option>数学</option>
+          <option>理科</option>
+          <option>英語</option>
+          <option>技術・家庭</option>
+          <option>音楽</option>
+          <option>美術</option>
+          <option>保健体育</option>
+          <option>道徳</option>
+          <option>総合</option>
+          <option>学活</option>
+          <option>重要</option>
+          <option>その他</option>
+        </select>
+      </label>
+
+
+      <label>
+        タイトル
+
+        <input
+          id="assignmentTitle"
+          type="text"
+          maxlength="100"
+          required
+        />
+      </label>
+
+
+      <label>
+        内容
+
+        <textarea
+          id="assignmentDetail"
+          rows="4"
+          maxlength="500"
+        ></textarea>
+      </label>
+
+
+      <label>
+        期限
+
+        <input
+          id="assignmentDueDate"
+          type="date"
+        />
+      </label>
+
+
+      <label>
+        状況
+
+        <input
+          id="assignmentStatus"
+          type="text"
+          maxlength="80"
+          placeholder="例: 未提出 / 配布済み / 確認中"
+        />
+      </label>
+
+
+      <div class="dialog-actions">
+
+        <button value="cancel">
+          キャンセル
+        </button>
+
+        <button
+          id="saveAssignmentButton"
+          value="default"
+          class="primary"
+        >
+          保存
+        </button>
+
+      </div>
+
+    </form>
+  </dialog>
+
+
+  <!-- 時間割編集画面 -->
+  <dialog id="cellDialog">
+
+    <form
+      id="cellForm"
+      method="dialog"
+      class="dialog-form"
+    >
+
+      <h2 id="cellDialogTitle">
+        時間割を編集
+      </h2>
+
+      <input id="cellId" type="hidden" />
+
+
+      <label>
+        科目
+
+        <input
+          id="cellSubject"
+          type="text"
+          maxlength="40"
+        />
+      </label>
+
+
+      <label>
+        メモ
+
+        <textarea
+          id="cellMemo"
+          rows="3"
+          maxlength="300"
+        ></textarea>
+      </label>
+
+
+      <div class="dialog-actions">
+
+        <button value="cancel">
+          キャンセル
+        </button>
+
+        <button
+          id="deleteCellButton"
+          value="default"
+          class="danger"
+        >
+          削除
+        </button>
+
+        <button
+          id="saveCellButton"
+          value="default"
+          class="primary"
+        >
+          保存
+        </button>
+
+      </div>
+
+    </form>
+  </dialog>
+
+
+  <!-- 行事・連絡編集画面 -->
+  <dialog id="eventDialog">
+
+    <form
+      id="eventForm"
+      method="dialog"
+      class="dialog-form"
+    >
+
+      <h2 id="eventDialogTitle">
+        行事・連絡を追加
+      </h2>
+
+      <input id="eventId" type="hidden" />
+
+
+      <label>
+        日付
+
+        <input
+          id="eventDate"
+          type="date"
+        />
+      </label>
+
+
+      <label>
+        種類
+
+        <select id="eventType">
+          <option>行事</option>
+          <option>日課</option>
+          <option>連絡事項</option>
+          <option>給食当番</option>
+          <option>その他</option>
+        </select>
+      </label>
+
+
+      <label>
+        内容
+
+        <textarea
+          id="eventText"
+          rows="4"
+          maxlength="500"
+          required
+        ></textarea>
+      </label>
+
+
+      <div class="dialog-actions">
+
+        <button value="cancel">
+          キャンセル
+        </button>
+
+        <button
+          id="saveEventButton"
+          value="default"
+          class="primary"
+        >
+          保存
+        </button>
+
+      </div>
+
+    </form>
+  <</html>
+/dialog>
+
+
+  <script type="module" src="app.js"></script>
+
+</body>
