@@ -1,0 +1,16 @@
+{
+  "name": "クラスの予定表",
+  "short_name": "予定表",
+  "description": "宿題・提出物・行事をみんなで共有できる学級の予定表アプリ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#4f6ef5",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

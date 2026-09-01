@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-homework: var(--homework);
+  --color-homework-foreground: var(--homework-foreground);
+  --color-submission: var(--submission);
+  --color-submission-foreground: var(--submission-foreground);
+  --color-event: var(--event);
+  --color-event-foreground: var(--event-foreground);
+
+  --radius: 1rem;
+}
+
+:root {
+  --background: oklch(0.98 0.008 250);
+  --foreground: oklch(0.24 0.03 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.03 260);
+  --muted: oklch(0.95 0.01 250);
+  --muted-foreground: oklch(0.52 0.02 260);
+  --border: oklch(0.9 0.012 250);
+  --primary: oklch(0.55 0.14 255);
+  --primary-foreground: oklch(0.99 0.005 250);
+
+  /* 宿題 = 青 */
+  --homework: oklch(0.58 0.15 250);
+  --homework-foreground: oklch(0.99 0.005 250);
+  /* 提出物 = 緑 */
+  --submission: oklch(0.6 0.15 150);
+  --submission-foreground: oklch(0.99 0.005 250);
+  /* 行事 = 赤 */
+  --event: oklch(0.6 0.19 25);
+  --event-foreground: oklch(0.99 0.005 250);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  background-color: var(--color-background);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
